@@ -1,0 +1,20 @@
+<h2>Customer Directory</h2>
+<a href="{% url 'customer_create' %}">+ Register New Customer</a>
+<table border="1" cellpadding="8" style="margin-top: 10px; border-collapse: collapse;">
+    <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    {% for customer in customers %}
+    <tr>
+        <td>{{ customer.name }}</td>
+        <td>{{ customer.phone }}</td>
+        <td>{{ customer.email|default:"N/A" }}</td>
+        <td><a href="{% url 'customer_detail' customer.pk %}">View Profile & History</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">No customers registered yet.</td></tr>
+    {% endfor %}
+</table>
