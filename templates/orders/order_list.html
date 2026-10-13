@@ -1,29 +1,51 @@
-<h2>All Laundry Orders</h2>
-<a href="{% url 'order_create' %}">+ Create New Order</a>
-<table border="1" cellpadding="8">
-  <tr>
-    <th>Order #</th>
-    <th>Customer</th>
-    <th>Service</th>
-    <th>Weight (kg)</th>
-    <th>Total Price</th>
-    <th>Status</th>
-    <th>Actions</th>
-  </tr>
-  {% for order in orders %}
-  <tr>
-    <td><a href="{% url 'order_detail' pk=order.pk %}">{{ order.order_number }}</a></td>
-    <td>{{ order.customer }}</td>
-    <td>{{ order.service.name }}</td>
-    <td>{{ order.weight_kg }} kg</td>
-    <td>₱{{ order.total_price }}</td>
-    <td><strong>{{ order.get_status_display }}</strong></td>
-    <td>
-      <a href="{% url 'record_weight' pk=order.pk %}">Record Weight</a> |
-      <a href="{% url 'update_pricing_status' pk=order.pk %}">Update Status/Pricing</a>
-    </td>
-  </tr>
-  {% empty %}
-  <tr><td colspan="7">No orders found.</td></tr>
-  {% endfor %}
-</table>
+{% extends 'base.html' %}
+
+{% block title %}Laundry Orders{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold mb-1" style="color: var(--color-dark-navy);">Orders</h2>
+    <p class="text-muted mb-0">Manage and track customer laundry packages</p>
+  </div>
+  <a href="{% url 'order_create' %}" class="btn-primary-custom">+ New Order</a>
+</div>
+
+<div class="card-custom">
+  <table class="table-custom">
+    <thead>
+      <tr>
+        <th>Order #</th>
+        <th>Customer</th>
+        <th>Service</th>
+        <th>Weight</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td class="fw-bold">{{ order.order_number }}</td>
+        <td>{{ order.customer.name }}</td>
+        <td>{{ order.service.name }}</td>
+        <td>{{ order.weight_kg }} kg</td>
+        <td class="fw-bold">₱{{ order.total_price }}</td>
+        <td>
+          <span class="badge-status badge-received">{{ order.get_status_display }}</span>
+        </td>
+        <td>
+          <a href="{% url 'record_weight' pk=order.pk %}" class="btn-accent-custom text-sm">Weight</a>
+          <a href="{% url 'update_pricing_status' pk=order.pk %}" class="btn-primary-custom text-sm">Update</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="text-center py-4 text-muted">No orders found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

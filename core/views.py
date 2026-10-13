@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Customer, Service
+from .models import Customer, Service, Order
 from .forms import CustomerForm, ServiceForm, OrderForm, WeightRecordingForm, OrderPricingForm
 
 # --- HOME VIEW ---

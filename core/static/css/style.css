@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --color-dark-navy: #0d1b2a;
+  --color-deep-blue: #1b263b;
+  --color-slate-blue: #415a77;
+  --color-soft-blue: #778da9;
+  --color-light-bg: #e0e1dd;
+  --color-white: #ffffff;
+  --radius-smooth: 12px;
+  --shadow-subtle: 0 4px 20px rgba(13, 27, 42, 0.08);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--color-light-bg);
+  color: var(--color-dark-navy);
+  margin: 0;
+  padding: 0;
+}
+
+/* Sidebar & Navbar Layout */
+.navbar-custom {
+  background-color: var(--color-dark-navy);
+  padding: 1rem 2rem;
+  box-shadow: var(--shadow-subtle);
+}
+
+.navbar-brand {
+  color: var(--color-white) !important;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.5px;
+}
+
+.nav-link {
+  color: var(--color-soft-blue) !important;
+  font-weight: 500;
+  margin-left: 1rem;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--color-white) !important;
+}
+
+/* Minimalist Cards */
+.card-custom {
+  background: var(--color-white);
+  border: 1px solid rgba(119, 141, 169, 0.2);
+  border-radius: var(--radius-smooth);
+  box-shadow: var(--shadow-subtle);
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+/* Modern Tables */
+.table-custom {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+}
+
+.table-custom th {
+  background-color: var(--color-deep-blue);
+  color: var(--color-white);
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.table-custom th:first-child { border-top-left-radius: 8px; }
+.table-custom th:last-child { border-top-right-radius: 8px; }
+
+.table-custom td {
+  padding: 12px 16px;
+  background-color: var(--color-white);
+  border-bottom: 1px solid rgba(119, 141, 169, 0.15);
+  font-size: 0.95rem;
+}
+
+/* Rounded Minimal Buttons */
+.btn-primary-custom {
+  background-color: var(--color-deep-blue);
+  color: var(--color-white);
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary-custom:hover {
+  background-color: var(--color-dark-navy);
+  color: var(--color-white);
+}
+
+.btn-accent-custom {
+  background-color: var(--color-soft-blue);
+  color: var(--color-white);
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-accent-custom:hover {
+  background-color: var(--color-slate-blue);
+  color: var(--color-white);
+}
+
+/* Clean Form Controls */
+.form-control, .form-select {
+  border-radius: 8px;
+  border: 1px solid var(--color-soft-blue);
+  padding: 0.6rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--color-deep-blue);
+  box-shadow: 0 0 0 3px rgba(27, 38, 59, 0.15);
+}
+
+/* Minimal Status Badges */
+.badge-status {
+  padding: 0.35em 0.8em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.badge-received { background-color: rgba(119, 141, 169, 0.2); color: var(--color-dark-navy); }
+.badge-weighed { background-color: var(--color-soft-blue); color: var(--color-white); }
+.badge-completed { background-color: var(--color-deep-blue); color: var(--color-white); }
+
+/* Custom Django Admin Styling */
+:root {
+  --primary: #0d1b2a !important;
+  --secondary: #1b263b !important;
+  --accent: #415a77 !important;
+  --header-bg: #0d1b2a !important;
+  --breadcrumbs-bg: #1b263b !important;
+}
+
+#header {
+  background-color: #0d1b2a !important;
+  color: #ffffff !important;
+}
+
+div.breadcrumbs {
+  background-color: #1b263b !important;
+}
+
+.module h2, .module caption, th {
+  background-color: #1b263b !important;
+}
+
+a:link, a:visited {
+  color: #415a77;
+}
