@@ -1,18 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Laundry Management System</title>
-    <style>
-        body { font-family: sans-serif; text-align: center; margin-top: 50px; background-color: #f4f6f8; }
-        .card { display: inline-block; padding: 30px 50px; background: white; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        a { color: #007bff; text-decoration: none; font-weight: bold; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>Laundry Management System</h1>
-        <p><a href="/admin/">Go to Database Admin Panel →</a></p>
+{% extends 'base.html' %}
+
+{% block title %}Home - Laundry System{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="p-5 text-white" style="background: linear-gradient(135deg, #4ba3e3 0%, #3a86ff 100%); border-radius: 24px; box-shadow: 0 20px 40px rgba(75, 163, 227, 0.25);">
+    <div class="row align-items-center py-4">
+      <div class="col-lg-7 ps-lg-5">
+        <h1 class="display-3 fw-bold mb-3" style="letter-spacing: -1.5px; color: #002244;">Made Clean.<br>Made To Clean.</h1>
+        <p class="fs-5 mb-4 text-white opacity-90" style="max-width: 500px;">Discover intuitive order tracking, custom service handling, and seamless customer management.</p>
+        <div class="d-flex gap-3">
+          <a href="{% url 'order_list' %}" class="btn btn-dropps-navy shadow-sm">View Orders</a>
+          <a href="{% url 'service_list' %}" class="btn btn-dropps-teal shadow-sm">Explore Services</a>
+        </div>
+      </div>
     </div>
-</body>
-</html>
+  </div>
+</div>
+{% endblock %}

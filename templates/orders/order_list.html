@@ -1,51 +1,56 @@
 {% extends 'base.html' %}
 
-{% block title %}Laundry Orders{% endblock %}
+{% block title %}Orders - Laundry Management System{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
-    <h2 class="fw-bold mb-1" style="color: var(--color-dark-navy);">Orders</h2>
-    <p class="text-muted mb-0">Manage and track customer laundry packages</p>
+    <h2 class="fw-bold text-white mb-1">Orders Management</h2>
+    <p class="text-muted mb-0 small">Track and update customer laundry orders</p>
   </div>
-  <a href="{% url 'order_create' %}" class="btn-primary-custom">+ New Order</a>
+  <a href="{% url 'order_create' %}" class="btn btn-accent">+ New Order</a>
 </div>
 
-<div class="card-custom">
-  <table class="table-custom">
-    <thead>
-      <tr>
-        <th>Order #</th>
-        <th>Customer</th>
-        <th>Service</th>
-        <th>Weight</th>
-        <th>Total</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for order in orders %}
-      <tr>
-        <td class="fw-bold">{{ order.order_number }}</td>
-        <td>{{ order.customer.name }}</td>
-        <td>{{ order.service.name }}</td>
-        <td>{{ order.weight_kg }} kg</td>
-        <td class="fw-bold">₱{{ order.total_price }}</td>
-        <td>
-          <span class="badge-status badge-received">{{ order.get_status_display }}</span>
-        </td>
-        <td>
-          <a href="{% url 'record_weight' pk=order.pk %}" class="btn-accent-custom text-sm">Weight</a>
-          <a href="{% url 'update_pricing_status' pk=order.pk %}" class="btn-primary-custom text-sm">Update</a>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="7" class="text-center py-4 text-muted">No orders found.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="card card-dark">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-custom">
+        <thead>
+          <tr>
+            <th class="ps-4">Order ID</th>
+            <th>Customer</th>
+            <th>Service</th>
+            <th>Weight</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th class="text-end pe-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td class="ps-4 fw-bold text-white">#{{ order.id }}</td>
+            <td class="fw-semibold">{{ order.customer.name }}</td>
+            <td>{{ order.service.name }}</td>
+            <td>{% if order.weight_kg %}{{ order.weight_kg }} kg{% else %}<span class="text-muted">--</span>{% endif %}</td>
+            <td class="text-white fw-bold">₱{{ order.total_price|default:"0.00" }}</td>
+            <td>
+              <span class="badge-custom badge-pending">{{ order.get_status_display|default:order.status }}</span>
+            </td>
+            <td class="text-end pe-4">
+              <a href="{% url 'order_detail' order.pk %}" class="btn btn-sm btn-outline-light me-1">View</a>
+              <a href="{% url 'record_weight' order.pk %}" class="btn btn-sm btn-outline-warning me-1">Weight</a>
+              <a href="{% url 'update_pricing_status' order.pk %}" class="btn btn-sm btn-outline-info">Pricing</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center py-5 text-muted">No orders found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 {% endblock %}
