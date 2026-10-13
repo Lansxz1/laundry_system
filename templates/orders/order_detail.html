@@ -1,0 +1,15 @@
+<h2>Order Details: {{ order.order_number }}</h2>
+<p><strong>Customer:</strong> {{ order.customer }}</p>
+<p><strong>Service:</strong> {{ order.service.name }} (₱{{ order.service.price_per_kg }}/kg)</p>
+<p><strong>Date Received:</strong> {{ order.date_received }}</p>
+<p><strong>Status:</strong> {{ order.get_status_display }}</p>
+<hr>
+<h3>Weight & Pricing Summary</h3>
+<p><strong>Weight:</strong> {{ order.weight_kg }} kg</p>
+<p><strong>Additional Charge:</strong> ₱{{ order.additional_charge }}</p>
+<p><strong>Discount:</strong> ₱{{ order.discount_amount }}</p>
+<h3>Total Amount: ₱{{ order.total_price }}</h3>
+
+<a href="{% url 'record_weight' pk=order.pk %}">Record/Update Weight</a> | 
+<a href="{% url 'update_pricing_status' pk=order.pk %}">Update Pricing/Status</a> | 
+<a href="{% url 'order_list' %}">Back to Orders</a>

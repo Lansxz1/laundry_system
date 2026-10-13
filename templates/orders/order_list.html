@@ -1,0 +1,29 @@
+<h2>All Laundry Orders</h2>
+<a href="{% url 'order_create' %}">+ Create New Order</a>
+<table border="1" cellpadding="8">
+  <tr>
+    <th>Order #</th>
+    <th>Customer</th>
+    <th>Service</th>
+    <th>Weight (kg)</th>
+    <th>Total Price</th>
+    <th>Status</th>
+    <th>Actions</th>
+  </tr>
+  {% for order in orders %}
+  <tr>
+    <td><a href="{% url 'order_detail' pk=order.pk %}">{{ order.order_number }}</a></td>
+    <td>{{ order.customer }}</td>
+    <td>{{ order.service.name }}</td>
+    <td>{{ order.weight_kg }} kg</td>
+    <td>₱{{ order.total_price }}</td>
+    <td><strong>{{ order.get_status_display }}</strong></td>
+    <td>
+      <a href="{% url 'record_weight' pk=order.pk %}">Record Weight</a> |
+      <a href="{% url 'update_pricing_status' pk=order.pk %}">Update Status/Pricing</a>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="7">No orders found.</td></tr>
+  {% endfor %}
+</table>

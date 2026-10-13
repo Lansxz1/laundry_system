@@ -1,0 +1,7 @@
+<h2>Update Pricing & Processing Status for {{ order.order_number }}</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Update Order</button>
+</form>
+<a href="{% url 'order_detail' pk=order.pk %}">Cancel</a>

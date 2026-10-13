@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Customer, Service
-from .forms import CustomerForm, ServiceForm
+from .forms import CustomerForm, ServiceForm, OrderForm, WeightRecordingForm, OrderPricingForm
 
 # --- HOME VIEW ---
 
@@ -63,3 +63,47 @@ def service_delete(request, pk):
         service.delete()
         return redirect('service_list')
     return render(request, 'services/service_confirm_delete.html', {'service': service})
+
+# ORDER VIEWS (Task 4 & Task 5)
+def order_list(request):
+    orders = Order.objects.all().order_by('-date_received')
+    return render(request, 'orders/order_list.html', {'orders': orders})
+
+def order_create(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save()
+            return redirect('order_detail', pk=order.pk)
+    else:
+        form = OrderForm()
+    return render(request, 'orders/order_form.html', {'form': form, 'title': 'Create Laundry Order'})
+
+def order_detail(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    return render(request, 'orders/order_detail.html', {'order': order})
+
+def record_weight(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    if request.method == 'POST':
+        form = WeightRecordingForm(request.POST, instance=order)
+        if form.is_valid():
+            order = form.save(commit=False)
+            if order.status == 'RECEIVED':
+                order.status = 'WEIGHED'
+            order.save()
+            return redirect('order_detail', pk=order.pk)
+    else:
+        form = WeightRecordingForm(instance=order)
+    return render(request, 'orders/record_weight.html', {'form': form, 'order': order})
+
+def update_pricing_status(request, pk):
+    order = get_object_or_404(Order, pk=pk)
+    if request.method == 'POST':
+        form = OrderPricingForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('order_detail', pk=order.pk)
+    else:
+        form = OrderPricingForm(instance=order)
+    return render(request, 'orders/update_pricing.html', {'form': form, 'order': order})

@@ -1,0 +1,7 @@
+<h2>Record Weight for {{ order.order_number }}</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Save Weight</button>
+</form>
+<a href="{% url 'order_detail' pk=order.pk %}">Cancel</a>
