@@ -1,7 +1,20 @@
-<h2>Delete Service</h2>
-<p>Are you sure you want to delete the service "{{ service.name }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Confirm Delete</button>
-    <a href="{% url 'service_list' %}">Cancel</a>
-</form>
+{% extends 'base.html' %}
+
+{% block title %}Delete Service - Laundry System{% endblock %}
+
+{% block content %}
+<div class="confirm-card">
+  <div class="app-card">
+    <div class="app-card-body py-5">
+      <div class="confirm-icon"><i class="bi bi-trash3"></i></div>
+      <h3 class="fw-bold mb-2">Delete Service</h3>
+      <p class="text-muted mb-4">Are you sure you want to delete <strong>"{{ service.name }}"</strong>? This action can't be undone.</p>
+      <form method="post" class="d-flex justify-content-center gap-2">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger-solid">Yes, delete</button>
+        <a href="{% url 'service_list' %}" class="btn btn-light-outline">Cancel</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

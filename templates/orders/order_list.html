@@ -1,56 +1,52 @@
 {% extends 'base.html' %}
 
-{% block title %}Orders - Laundry Management System{% endblock %}
+{% block title %}Orders - Laundry System{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-header">
   <div>
-    <h2 class="fw-bold text-white mb-1">Orders Management</h2>
-    <p class="text-muted mb-0 small">Track and update customer laundry orders</p>
+    <h2>Orders</h2>
+    <p>Track and update customer laundry orders</p>
   </div>
-  <a href="{% url 'order_create' %}" class="btn btn-accent">+ New Order</a>
+  <a href="{% url 'order_create' %}" class="btn btn-brand"><i class="bi bi-plus-lg me-1"></i> New Order</a>
 </div>
 
-<div class="card card-dark">
-  <div class="card-body p-0">
-    <div class="table-responsive">
-      <table class="table table-custom">
-        <thead>
-          <tr>
-            <th class="ps-4">Order ID</th>
-            <th>Customer</th>
-            <th>Service</th>
-            <th>Weight</th>
-            <th>Total Price</th>
-            <th>Status</th>
-            <th class="text-end pe-4">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for order in orders %}
-          <tr>
-            <td class="ps-4 fw-bold text-white">#{{ order.id }}</td>
-            <td class="fw-semibold">{{ order.customer.name }}</td>
-            <td>{{ order.service.name }}</td>
-            <td>{% if order.weight_kg %}{{ order.weight_kg }} kg{% else %}<span class="text-muted">--</span>{% endif %}</td>
-            <td class="text-white fw-bold">₱{{ order.total_price|default:"0.00" }}</td>
-            <td>
-              <span class="badge-custom badge-pending">{{ order.get_status_display|default:order.status }}</span>
-            </td>
-            <td class="text-end pe-4">
-              <a href="{% url 'order_detail' order.pk %}" class="btn btn-sm btn-outline-light me-1">View</a>
-              <a href="{% url 'record_weight' order.pk %}" class="btn btn-sm btn-outline-warning me-1">Weight</a>
-              <a href="{% url 'update_pricing_status' order.pk %}" class="btn btn-sm btn-outline-info">Pricing</a>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="7" class="text-center py-5 text-muted">No orders found.</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+<div class="app-card">
+  <div class="table-responsive">
+    <table class="table table-modern">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Customer</th>
+          <th>Service</th>
+          <th>Weight</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td class="fw-semibold">#{{ order.id }}</td>
+          <td>{{ order.customer.name }}</td>
+          <td>{{ order.service.name }}</td>
+          <td>{% if order.weight_kg %}{{ order.weight_kg }} kg{% else %}<span class="text-muted">--</span>{% endif %}</td>
+          <td class="fw-semibold">₱{{ order.total_price|default:"0.00" }}</td>
+          <td><span class="badge-status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></td>
+          <td class="text-end text-nowrap">
+            <a href="{% url 'order_detail' order.pk %}" class="btn btn-soft btn-soft-primary">View</a>
+            <a href="{% url 'record_weight' order.pk %}" class="btn btn-soft btn-soft-warning">Weight</a>
+            <a href="{% url 'update_pricing_status' order.pk %}" class="btn btn-soft btn-soft-accent">Pricing</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="empty-state"><i class="bi bi-inbox"></i>No orders found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 {% endblock %}

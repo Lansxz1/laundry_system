@@ -1,7 +1,40 @@
-<h2>{{ title }}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Service</button>
-    <a href="{% url 'service_list' %}">Cancel</a>
-</form>
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit{% else %}Add{% endif %} Service - Laundry System{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <div class="page-header">
+    <div>
+      <h2>{% if form.instance.pk %}Edit Service{% else %}Add Service{% endif %}</h2>
+      <p>Set the service name and its price per kilogram</p>
+    </div>
+  </div>
+
+  <div class="app-card">
+    <div class="app-card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="nonfield-error">{{ form.non_field_errors }}</div>{% endif %}
+
+        {% for field in form %}
+        <div class="field {% if field.field.widget.input_type == 'checkbox' %}check-field{% endif %}">
+          {% if field.field.widget.input_type == 'checkbox' %}
+            {{ field }} {{ field.label_tag }}
+          {% else %}
+            {{ field.label_tag }} {{ field }}
+          {% endif %}
+          {% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}
+          {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        {% endfor %}
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-brand"><i class="bi bi-check2 me-1"></i> Save Service</button>
+          <a href="{% url 'service_list' %}" class="btn btn-light-outline">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

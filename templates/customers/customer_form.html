@@ -1,7 +1,36 @@
-<h2>{{ title }}</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save Customer</button>
-    <a href="{% url 'customer_list' %}">Cancel</a>
-</form>
+{% extends 'base.html' %}
+
+{% block title %}Add Customer - Laundry System{% endblock %}
+
+{% block content %}
+<div class="form-card">
+  <div class="page-header">
+    <div>
+      <h2>{{ title|default:"Add Customer" }}</h2>
+      <p>Enter the customer's contact details</p>
+    </div>
+  </div>
+
+  <div class="app-card">
+    <div class="app-card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}<div class="nonfield-error">{{ form.non_field_errors }}</div>{% endif %}
+
+        {% for field in form %}
+        <div class="field">
+          {{ field.label_tag }} {{ field }}
+          {% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}
+          {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+        </div>
+        {% endfor %}
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-brand"><i class="bi bi-check2 me-1"></i> Save Customer</button>
+          <a href="{% url 'customer_list' %}" class="btn btn-light-outline">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
