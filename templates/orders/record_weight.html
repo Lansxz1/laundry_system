@@ -1,36 +1,34 @@
 {% extends 'base.html' %}
 
-{% block title %}Record Weight - Laundry System{% endblock %}
+{% block title %}Record weight - Laundry System{% endblock %}
 
 {% block content %}
-<div class="form-card">
-  <div class="page-header">
-    <div>
-      <h2>Record Weight</h2>
-      <p>Order {{ order.order_number }}</p>
-    </div>
+<div class="page-head">
+  <div>
+    <h1>Record weight</h1>
+    <p>Order {{ order.order_number }}. Enter the weight in kilograms and the price updates automatically.</p>
   </div>
+</div>
 
-  <div class="app-card">
-    <div class="app-card-body">
-      <form method="post" novalidate>
-        {% csrf_token %}
-        {% if form.non_field_errors %}<div class="nonfield-error">{{ form.non_field_errors }}</div>{% endif %}
+<div class="form-wrap">
+  <div class="panel panel-pad">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}
 
-        {% for field in form %}
-        <div class="field">
-          {{ field.label_tag }} {{ field }}
-          {% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}
-          {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
-        </div>
-        {% endfor %}
+      {% for field in form %}
+      <div class="field">
+        {{ field.label_tag }} {{ field }}
+        {% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}
+        {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      {% endfor %}
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-brand"><i class="bi bi-check2 me-1"></i> Save Weight</button>
-          <a href="{% url 'order_detail' pk=order.pk %}" class="btn btn-light-outline">Cancel</a>
-        </div>
-      </form>
-    </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-teal">Save weight</button>
+        <a href="{% url 'order_detail' pk=order.pk %}" class="btn btn-line">Cancel</a>
+      </div>
+    </form>
   </div>
 </div>
 {% endblock %}

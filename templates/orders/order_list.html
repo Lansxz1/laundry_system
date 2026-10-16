@@ -3,17 +3,19 @@
 {% block title %}Orders - Laundry System{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-head">
   <div>
-    <h2>Orders</h2>
-    <p>Track and update customer laundry orders</p>
+    <h1>Orders</h1>
+    <p>Every laundry order and where it stands.</p>
   </div>
-  <a href="{% url 'order_create' %}" class="btn btn-brand"><i class="bi bi-plus-lg me-1"></i> New Order</a>
+  <div class="head-actions">
+    <a href="{% url 'order_create' %}" class="btn btn-teal">New order</a>
+  </div>
 </div>
 
-<div class="app-card">
+<div class="panel">
   <div class="table-responsive">
-    <table class="table table-modern">
+    <table class="table data-table">
       <thead>
         <tr>
           <th>Order</th>
@@ -22,27 +24,29 @@
           <th>Weight</th>
           <th>Total</th>
           <th>Status</th>
-          <th class="text-end">Actions</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {% for order in orders %}
         <tr>
-          <td class="fw-semibold">#{{ order.id }}</td>
+          <td class="strong">#{{ order.id }}</td>
           <td>{{ order.customer.name }}</td>
           <td>{{ order.service.name }}</td>
-          <td>{% if order.weight_kg %}{{ order.weight_kg }} kg{% else %}<span class="text-muted">--</span>{% endif %}</td>
-          <td class="fw-semibold">₱{{ order.total_price|default:"0.00" }}</td>
-          <td><span class="badge-status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></td>
-          <td class="text-end text-nowrap">
-            <a href="{% url 'order_detail' order.pk %}" class="btn btn-soft btn-soft-primary">View</a>
-            <a href="{% url 'record_weight' order.pk %}" class="btn btn-soft btn-soft-warning">Weight</a>
-            <a href="{% url 'update_pricing_status' order.pk %}" class="btn btn-soft btn-soft-accent">Pricing</a>
+          <td class="num">{% if order.weight_kg %}{{ order.weight_kg }} kg{% else %}<span class="muted">Not weighed</span>{% endif %}</td>
+          <td class="strong num">₱{{ order.total_price|default:"0.00" }}</td>
+          <td><span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></td>
+          <td>
+            <div class="row-links">
+              <a href="{% url 'order_detail' order.pk %}" class="row-link">View</a>
+              <a href="{% url 'record_weight' order.pk %}" class="row-link">Weight</a>
+              <a href="{% url 'update_pricing_status' order.pk %}" class="row-link">Pricing</a>
+            </div>
           </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="7" class="empty-state"><i class="bi bi-inbox"></i>No orders found.</td>
+          <td colspan="7" class="empty">No orders yet. <a href="{% url 'order_create' %}">Create the first order.</a></td>
         </tr>
         {% endfor %}
       </tbody>

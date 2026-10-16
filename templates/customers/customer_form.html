@@ -1,36 +1,34 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Customer - Laundry System{% endblock %}
+{% block title %}Add customer - Laundry System{% endblock %}
 
 {% block content %}
-<div class="form-card">
-  <div class="page-header">
-    <div>
-      <h2>{{ title|default:"Add Customer" }}</h2>
-      <p>Enter the customer's contact details</p>
-    </div>
+<div class="page-head">
+  <div>
+    <h1>Add customer</h1>
+    <p>A name and phone number are enough to get started.</p>
   </div>
+</div>
 
-  <div class="app-card">
-    <div class="app-card-body">
-      <form method="post" novalidate>
-        {% csrf_token %}
-        {% if form.non_field_errors %}<div class="nonfield-error">{{ form.non_field_errors }}</div>{% endif %}
+<div class="form-wrap">
+  <div class="panel panel-pad">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}
 
-        {% for field in form %}
-        <div class="field">
-          {{ field.label_tag }} {{ field }}
-          {% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}
-          {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
-        </div>
-        {% endfor %}
+      {% for field in form %}
+      <div class="field">
+        {{ field.label_tag }} {{ field }}
+        {% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}
+        {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      {% endfor %}
 
-        <div class="form-actions">
-          <button type="submit" class="btn btn-brand"><i class="bi bi-check2 me-1"></i> Save Customer</button>
-          <a href="{% url 'customer_list' %}" class="btn btn-light-outline">Cancel</a>
-        </div>
-      </form>
-    </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-teal">Save customer</button>
+        <a href="{% url 'customer_list' %}" class="btn btn-line">Cancel</a>
+      </div>
+    </form>
   </div>
 </div>
 {% endblock %}

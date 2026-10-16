@@ -3,47 +3,46 @@
 {% block title %}Customers - Laundry System{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-head">
   <div>
-    <h2>Customers</h2>
-    <p>Everyone registered in your laundry system</p>
+    <h1>Customers</h1>
+    <p>Everyone who has registered with you.</p>
   </div>
-  <a href="{% url 'customer_create' %}" class="btn btn-brand"><i class="bi bi-plus-lg me-1"></i> Add Customer</a>
+  <div class="head-actions">
+    <a href="{% url 'customer_create' %}" class="btn btn-teal">Add customer</a>
+  </div>
 </div>
 
-<div class="app-card">
+<div class="panel">
   <div class="table-responsive">
-    <table class="table table-modern">
+    <table class="table data-table">
       <thead>
         <tr>
           <th>Name</th>
-          <th>Email</th>
           <th>Phone</th>
+          <th>Email</th>
           <th>Address</th>
           <th>Registered</th>
-          <th class="text-end">Actions</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {% for customer in customers %}
         <tr>
-          <td>
-            <div class="d-flex align-items-center gap-3">
-              <span class="avatar">{{ customer.name|slice:":1"|upper }}</span>
-              <span class="fw-semibold">{{ customer.name }}</span>
-            </div>
-          </td>
-          <td>{{ customer.email|default:"--" }}</td>
+          <td class="strong">{{ customer.name }}</td>
           <td>{{ customer.phone|default:"--" }}</td>
+          <td>{{ customer.email|default:"--" }}</td>
           <td>{{ customer.address|default:"--" }}</td>
           <td>{{ customer.date_registered|date:"M d, Y" }}</td>
-          <td class="text-end">
-            <a href="{% url 'customer_detail' customer.pk %}" class="btn btn-soft btn-soft-primary">View</a>
+          <td>
+            <div class="row-links">
+              <a href="{% url 'customer_detail' customer.pk %}" class="row-link">View</a>
+            </div>
           </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="6" class="empty-state"><i class="bi bi-people"></i>No customers registered yet.</td>
+          <td colspan="6" class="empty">No customers yet. <a href="{% url 'customer_create' %}">Add the first customer.</a></td>
         </tr>
         {% endfor %}
       </tbody>

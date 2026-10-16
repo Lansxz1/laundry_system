@@ -1,20 +1,62 @@
 {% extends 'base.html' %}
 
-{% block title %}Home - Laundry System{% endblock %}
+{% block title %}Laundry System{% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="p-5 text-white" style="background: linear-gradient(135deg, #4ba3e3 0%, #3a86ff 100%); border-radius: 24px; box-shadow: 0 20px 40px rgba(75, 163, 227, 0.25);">
-    <div class="row align-items-center py-4">
-      <div class="col-lg-7 ps-lg-5">
-        <h1 class="display-3 fw-bold mb-3" style="letter-spacing: -1.5px; color: #002244;">Made Clean.<br>Made To Clean.</h1>
-        <p class="fs-5 mb-4 text-white opacity-90" style="max-width: 500px;">Discover intuitive order tracking, custom service handling, and seamless customer management.</p>
-        <div class="d-flex gap-3">
-          <a href="{% url 'order_list' %}" class="btn btn-dropps-navy shadow-sm">View Orders</a>
-          <a href="{% url 'service_list' %}" class="btn btn-dropps-teal shadow-sm">Explore Services</a>
-        </div>
-      </div>
+<section class="hero">
+  <div>
+    <h1>Clothes that come home in full bloom.</h1>
+    <p>We wash, dry and fold your laundry with care, so shirts, sheets and towels come back soft, bright and gently fragrant, like they spent the afternoon in a garden.</p>
+    <div class="d-flex flex-wrap gap-2">
+      <a href="{% url 'order_create' %}" class="btn btn-teal btn-big">Place an order</a>
+      <a href="{% url 'service_list' %}" class="btn btn-line btn-big">See our services</a>
     </div>
   </div>
-</div>
+
+  <div class="hero-art">
+    <svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+      <defs>
+        <g id="bloom" fill="#ffffff" fill-opacity="0.17">
+          <ellipse cx="0" cy="-62" rx="26" ry="58"/>
+          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(45)"/>
+          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(90)"/>
+          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(135)"/>
+          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(180)"/>
+          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(225)"/>
+          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(270)"/>
+          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(315)"/>
+          <circle r="17" fill="#f3cdb9" fill-opacity="1"/>
+        </g>
+      </defs>
+      <use href="#bloom" transform="translate(255 195) scale(1.7)"/>
+      <use href="#bloom" transform="translate(78 78) scale(0.6)"/>
+    </svg>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">From drop-off to pickup</h2>
+  <ol class="steps">
+    <li>
+      <div class="step-no">1</div>
+      <h3>Drop off</h3>
+      <p>Bring your laundry in and tell us about anything special it needs.</p>
+    </li>
+    <li>
+      <div class="step-no">2</div>
+      <h3>Weighed and priced</h3>
+      <p>We weigh your load and price it by the kilo, so you always know the cost.</p>
+    </li>
+    <li>
+      <div class="step-no">3</div>
+      <h3>Washed, dried, folded</h3>
+      <p>Every load is washed, dried and folded with a light, fresh fragrance.</p>
+    </li>
+    <li>
+      <div class="step-no">4</div>
+      <h3>Ready for pickup</h3>
+      <p>Once your order is marked ready, come by and collect it.</p>
+    </li>
+  </ol>
+</section>
 {% endblock %}

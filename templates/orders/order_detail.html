@@ -3,68 +3,49 @@
 {% block title %}Order {{ order.order_number }} - Laundry System{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-head">
   <div>
-    <h2>Order {{ order.order_number }}</h2>
-    <p>Details and pricing summary</p>
+    <h1>Order {{ order.order_number }}</h1>
+    <p><span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></p>
   </div>
-  <div class="d-flex flex-wrap gap-2">
-    <a href="{% url 'record_weight' pk=order.pk %}" class="btn btn-light-outline"><i class="bi bi-speedometer2 me-1"></i> Record Weight</a>
-    <a href="{% url 'update_pricing_status' pk=order.pk %}" class="btn btn-brand"><i class="bi bi-pencil-square me-1"></i> Update Pricing / Status</a>
+  <div class="head-actions">
+    <a href="{% url 'record_weight' pk=order.pk %}" class="btn btn-line">Record weight</a>
+    <a href="{% url 'update_pricing_status' pk=order.pk %}" class="btn btn-teal">Update pricing and status</a>
   </div>
 </div>
 
 <div class="row g-4">
   <div class="col-lg-7">
-    <div class="app-card h-100">
-      <div class="app-card-header">
-        Order Information
-        <span class="badge-status status-{{ order.status|lower }}">{{ order.get_status_display }}</span>
-      </div>
-      <div class="app-card-body">
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="label">Customer</div>
-            <div class="value">{{ order.customer.name }}</div>
-          </div>
-          <div class="info-item">
-            <div class="label">Service</div>
-            <div class="value">{{ order.service.name }} <span class="text-muted">(₱{{ order.service.price_per_kg }}/kg)</span></div>
-          </div>
-          <div class="info-item">
-            <div class="label">Date Received</div>
-            <div class="value">{{ order.date_received|date:"M d, Y · h:i A" }}</div>
-          </div>
-          <div class="info-item">
-            <div class="label">Expected Release</div>
-            <div class="value">{% if order.expected_release_date %}{{ order.expected_release_date|date:"M d, Y · h:i A" }}{% else %}<span class="text-muted">Not set</span>{% endif %}</div>
-          </div>
-          <div class="info-item" style="grid-column: 1 / -1;">
-            <div class="label">Special Instructions</div>
-            <div class="value">{{ order.special_instructions|default:"None" }}</div>
-          </div>
-        </div>
-      </div>
+    <div class="panel panel-pad h-100">
+      <h2 class="panel-title">Order details</h2>
+      <dl class="facts">
+        <dt>Customer</dt>
+        <dd>{{ order.customer.name }}</dd>
+        <dt>Service</dt>
+        <dd>{{ order.service.name }} <span class="muted">(₱{{ order.service.price_per_kg }} per kg)</span></dd>
+        <dt>Received</dt>
+        <dd>{{ order.date_received|date:"M d, Y, h:i A" }}</dd>
+        <dt>Expected release</dt>
+        <dd>{% if order.expected_release_date %}{{ order.expected_release_date|date:"M d, Y, h:i A" }}{% else %}<span class="muted">Not set</span>{% endif %}</dd>
+        <dt>Instructions</dt>
+        <dd>{{ order.special_instructions|default:"None" }}</dd>
+      </dl>
     </div>
   </div>
 
   <div class="col-lg-5">
-    <div class="app-card h-100">
-      <div class="app-card-header">Weight &amp; Pricing</div>
-      <div class="app-card-body">
-        <div class="summary-row"><span>Weight</span><span>{{ order.weight_kg }} kg</span></div>
-        <div class="summary-row"><span>Additional Charge</span><span>₱{{ order.additional_charge }}</span></div>
-        <div class="summary-row"><span>Discount</span><span>- ₱{{ order.discount_amount }}</span></div>
-        <div class="summary-total">
-          <span>Total Amount</span>
-          <span class="amount">₱{{ order.total_price }}</span>
-        </div>
+    <div class="panel panel-pad h-100">
+      <h2 class="panel-title">Price</h2>
+      <div class="ticket-line"><span>Weight</span><span class="num">{{ order.weight_kg }} kg</span></div>
+      <div class="ticket-line"><span>Additional charge</span><span class="num">₱{{ order.additional_charge }}</span></div>
+      <div class="ticket-line"><span>Discount</span><span class="num">−₱{{ order.discount_amount }}</span></div>
+      <div class="ticket-total">
+        <span>Total</span>
+        <span class="amount num">₱{{ order.total_price }}</span>
       </div>
     </div>
   </div>
 </div>
 
-<div class="mt-4">
-  <a href="{% url 'order_list' %}" class="btn btn-light-outline"><i class="bi bi-arrow-left me-1"></i> Back to Orders</a>
-</div>
+<a href="{% url 'order_list' %}" class="back-link">Back to orders</a>
 {% endblock %}

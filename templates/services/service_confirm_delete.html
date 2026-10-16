@@ -1,20 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Delete Service - Laundry System{% endblock %}
+{% block title %}Delete service - Laundry System{% endblock %}
 
 {% block content %}
-<div class="confirm-card">
-  <div class="app-card">
-    <div class="app-card-body py-5">
-      <div class="confirm-icon"><i class="bi bi-trash3"></i></div>
-      <h3 class="fw-bold mb-2">Delete Service</h3>
-      <p class="text-muted mb-4">Are you sure you want to delete <strong>"{{ service.name }}"</strong>? This action can't be undone.</p>
-      <form method="post" class="d-flex justify-content-center gap-2">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger-solid">Yes, delete</button>
-        <a href="{% url 'service_list' %}" class="btn btn-light-outline">Cancel</a>
-      </form>
-    </div>
+<div class="confirm">
+  <div class="panel panel-pad">
+    <h1 class="h3 mb-2">Delete "{{ service.name }}"?</h1>
+    <p class="muted">This removes the service and can't be undone.</p>
+    <form method="post" class="form-actions">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-red">Delete service</button>
+      <a href="{% url 'service_list' %}" class="btn btn-line">Keep it</a>
+    </form>
   </div>
 </div>
 {% endblock %}

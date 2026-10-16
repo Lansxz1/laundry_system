@@ -3,47 +3,51 @@
 {% block title %}Services - Laundry System{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-head">
   <div>
-    <h2>Services</h2>
-    <p>Manage the services you offer and their rates</p>
+    <h1>Services</h1>
+    <p>What you offer and what it costs per kilo.</p>
   </div>
-  <a href="{% url 'service_create' %}" class="btn btn-brand"><i class="bi bi-plus-lg me-1"></i> Add Service</a>
+  <div class="head-actions">
+    <a href="{% url 'service_create' %}" class="btn btn-teal">Add service</a>
+  </div>
 </div>
 
-<div class="app-card">
+<div class="panel">
   <div class="table-responsive">
-    <table class="table table-modern">
+    <table class="table data-table">
       <thead>
         <tr>
           <th>Service</th>
           <th>Price per kg</th>
           <th>Description</th>
           <th>Status</th>
-          <th class="text-end">Actions</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {% for service in services %}
         <tr>
-          <td class="fw-semibold">{{ service.name }}</td>
-          <td class="fw-semibold">₱{{ service.price_per_kg }}</td>
-          <td class="text-muted">{{ service.description|default:"No description provided" }}</td>
+          <td class="strong">{{ service.name }}</td>
+          <td class="strong num">₱{{ service.price_per_kg }}</td>
+          <td class="muted">{{ service.description|default:"No description" }}</td>
           <td>
             {% if service.is_active %}
-              <span class="badge-status pill-active">Active</span>
+              <span class="status status-released">Active</span>
             {% else %}
-              <span class="badge-status pill-inactive">Inactive</span>
+              <span class="status status-received">Inactive</span>
             {% endif %}
           </td>
-          <td class="text-end text-nowrap">
-            <a href="{% url 'service_update' service.pk %}" class="btn btn-soft btn-soft-warning">Edit</a>
-            <a href="{% url 'service_delete' service.pk %}" class="btn btn-soft btn-soft-danger">Delete</a>
+          <td>
+            <div class="row-links">
+              <a href="{% url 'service_update' service.pk %}" class="row-link">Edit</a>
+              <a href="{% url 'service_delete' service.pk %}" class="row-link row-link-danger">Delete</a>
+            </div>
           </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="5" class="empty-state"><i class="bi bi-stars"></i>No services created yet.</td>
+          <td colspan="5" class="empty">No services yet. <a href="{% url 'service_create' %}">Add the first service.</a></td>
         </tr>
         {% endfor %}
       </tbody>
