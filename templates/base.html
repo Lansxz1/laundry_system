@@ -38,14 +38,27 @@
     </div>
   </nav>
 
-  <main class="page">
-    <div class="container">
+  <main>
+    {% block hero %}{% endblock %}
+
+    {% block page_wrapper %}
+    <div class="container page">
       {% block content %}{% endblock %}
     </div>
+    {% endblock %}
+
+    {% block after %}{% endblock %}
   </main>
 
   <footer class="site-foot">
-    <div class="container">Laundry System</div>
+    <div class="container foot-inner">
+      <span>Laundry System</span>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="{% url 'order_list' %}">Orders</a>
+        <a href="{% url 'customer_list' %}">Customers</a>
+        <a href="{% url 'service_list' %}">Services</a>
+      </nav>
+    </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

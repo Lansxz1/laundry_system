@@ -2,61 +2,91 @@
 
 {% block title %}Laundry System{% endblock %}
 
-{% block content %}
-<section class="hero">
-  <div>
-    <h1>Clothes that come home in full bloom.</h1>
-    <p>We wash, dry and fold your laundry with care, so shirts, sheets and towels come back soft, bright and gently fragrant, like they spent the afternoon in a garden.</p>
-    <div class="d-flex flex-wrap gap-2">
-      <a href="{% url 'order_create' %}" class="btn btn-teal btn-big">Place an order</a>
-      <a href="{% url 'service_list' %}" class="btn btn-line btn-big">See our services</a>
-    </div>
-  </div>
+{% block hero %}
+<section class="hero-band">
+  {% comment %}
+    Logo goes here later. Example:
+    {% load static %} (put this at the very top of the file, under {% extends %})
+    <img src="{% static 'images/logo.png' %}" alt="Laundry System logo" class="hero-logo">
+  {% endcomment %}
 
-  <div class="hero-art">
-    <svg viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
-      <defs>
-        <g id="bloom" fill="#ffffff" fill-opacity="0.17">
-          <ellipse cx="0" cy="-62" rx="26" ry="58"/>
-          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(45)"/>
-          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(90)"/>
-          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(135)"/>
-          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(180)"/>
-          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(225)"/>
-          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(270)"/>
-          <ellipse cx="0" cy="-62" rx="26" ry="58" transform="rotate(315)"/>
-          <circle r="17" fill="#f3cdb9" fill-opacity="1"/>
-        </g>
-      </defs>
-      <use href="#bloom" transform="translate(255 195) scale(1.7)"/>
-      <use href="#bloom" transform="translate(78 78) scale(0.6)"/>
-    </svg>
+  <div class="container">
+    <div class="hero-copy">
+      <h1>Clothes that come home in full bloom.</h1>
+      <p>We wash, dry and fold your laundry with care, so shirts, sheets and towels come back soft, bright and gently fragrant, like they spent the afternoon in a garden.</p>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'order_create' %}" class="btn btn-paper btn-big">Place an order</a>
+        <a href="{% url 'service_list' %}" class="btn btn-ghost-light btn-big">See our services</a>
+      </div>
+    </div>
   </div>
 </section>
 
-<section>
-  <h2 class="section-title">From drop-off to pickup</h2>
-  <ol class="steps">
-    <li>
-      <div class="step-no">1</div>
-      <h3>Drop off</h3>
-      <p>Bring your laundry in and tell us about anything special it needs.</p>
-    </li>
-    <li>
-      <div class="step-no">2</div>
-      <h3>Weighed and priced</h3>
-      <p>We weigh your load and price it by the kilo, so you always know the cost.</p>
-    </li>
-    <li>
-      <div class="step-no">3</div>
-      <h3>Washed, dried, folded</h3>
-      <p>Every load is washed, dried and folded with a light, fresh fragrance.</p>
-    </li>
-    <li>
-      <div class="step-no">4</div>
-      <h3>Ready for pickup</h3>
-      <p>Once your order is marked ready, come by and collect it.</p>
-    </li>
-  </ol>
+<section class="benefits">
+  <div class="container">
+    <div class="benefits-grid">
+      <div class="benefit">
+        <h3>Priced by the kilo</h3>
+        <p>Every service has a clear rate per kilogram.</p>
+      </div>
+      <div class="benefit">
+        <h3>Tracked step by step</h3>
+        <p>From received to released, you can see where each order is.</p>
+      </div>
+      <div class="benefit">
+        <h3>Your details on file</h3>
+        <p>Contact info and past orders are kept together.</p>
+      </div>
+      <div class="benefit">
+        <h3>Clear charges</h3>
+        <p>Extra charges and discounts are listed on every order.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block page_wrapper %}
+<section class="home-section">
+  <div class="container">
+    <h2 class="section-title">From drop-off to pickup</h2>
+    <ol class="steps">
+      <li>
+        <div class="step-no">1</div>
+        <h3>Drop off</h3>
+        <p>Bring your laundry in and tell us about anything special it needs.</p>
+      </li>
+      <li>
+        <div class="step-no">2</div>
+        <h3>Weighed and priced</h3>
+        <p>We weigh your load and price it by the kilo, so you always know the cost.</p>
+      </li>
+      <li>
+        <div class="step-no">3</div>
+        <h3>Washed, dried, folded</h3>
+        <p>Every load is washed, dried and folded with a light, fresh fragrance.</p>
+      </li>
+      <li>
+        <div class="step-no">4</div>
+        <h3>Ready for pickup</h3>
+        <p>Once your order is marked ready, come by and collect it.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+{% endblock %}
+
+{% block after %}
+<section class="cta-band">
+  <div class="container cta-inner">
+    <div>
+      <h2>Bring us the pile on the chair.</h2>
+      <p>Place an order and we'll take it from there.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <a href="{% url 'order_create' %}" class="btn btn-paper btn-big">Place an order</a>
+      <a href="{% url 'service_list' %}" class="btn btn-ghost-light btn-big">See our services</a>
+    </div>
+  </div>
 </section>
 {% endblock %}
