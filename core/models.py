@@ -3,10 +3,28 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from django.utils import timezone
 
+class Course(models.Model):
+    """Lookup table for the Course Management module (id, course_name)."""
+    course_name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        ordering = ['course_name']
+
+    def __str__(self):
+        return self.course_name
+
 class Customer(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField(blank=True, null=True)
+    # New field: the selected course is stored as a foreign key (column course_id)
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='customers',
+    )
     address = models.TextField(blank=True, null=True)
     date_registered = models.DateTimeField(auto_now_add=True)
 

@@ -9,6 +9,7 @@
     <p>Registered {{ customer.date_registered|date:"M d, Y" }}</p>
   </div>
   <div class="head-actions">
+    <a href="{% url 'customer_update' customer.pk %}" class="btn btn-line">Edit customer</a>
     <a href="{% url 'order_create' %}" class="btn btn-teal">New order</a>
   </div>
 </div>
@@ -18,6 +19,8 @@
   <dl class="facts">
     <dt>Phone</dt>
     <dd>{{ customer.phone }}</dd>
+    <dt>Course</dt>
+    <dd>{{ customer.course|default:"N/A" }}</dd>
     <dt>Email</dt>
     <dd>{{ customer.email|default:"N/A" }}</dd>
     <dt>Address</dt>
@@ -61,5 +64,8 @@
   </div>
 </div>
 
-<a href="{% url 'customer_list' %}" class="back-link">Back to customers</a>
+<div class="detail-foot">
+  <a href="{% url 'customer_list' %}" class="back-link">Back to customers</a>
+  <a href="{% url 'customer_delete' customer.pk %}" class="row-link row-link-danger">Delete customer</a>
+</div>
 {% endblock %}

@@ -19,6 +19,7 @@
       <thead>
         <tr>
           <th>Name</th>
+          <th>Course</th>
           <th>Phone</th>
           <th>Email</th>
           <th>Address</th>
@@ -30,6 +31,7 @@
         {% for customer in customers %}
         <tr>
           <td class="strong">{{ customer.name }}</td>
+          <td>{{ customer.course|default:"--" }}</td>
           <td>{{ customer.phone|default:"--" }}</td>
           <td>{{ customer.email|default:"--" }}</td>
           <td>{{ customer.address|default:"--" }}</td>
@@ -37,12 +39,14 @@
           <td>
             <div class="row-links">
               <a href="{% url 'customer_detail' customer.pk %}" class="row-link">View</a>
+              <a href="{% url 'customer_update' customer.pk %}" class="row-link">Edit</a>
+              <a href="{% url 'customer_delete' customer.pk %}" class="row-link row-link-danger">Delete</a>
             </div>
           </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="6" class="empty">No customers yet. <a href="{% url 'customer_create' %}">Add the first customer.</a></td>
+          <td colspan="7" class="empty">No customers yet. <a href="{% url 'customer_create' %}">Add the first customer.</a></td>
         </tr>
         {% endfor %}
       </tbody>

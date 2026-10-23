@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete course - Laundry System{% endblock %}
+
+{% block content %}
+<div class="confirm">
+  <div class="panel panel-pad">
+    <h1 class="h3 mb-3">Delete "{{ course.course_name }}"?</h1>
+
+    {% if customer_count %}
+    <div class="notice">
+      {{ customer_count }} customer{{ customer_count|pluralize }} use{{ customer_count|pluralize:"s," }} this course. {{ customer_count|pluralize:"They,They" }} will stay in the system, but their course will be cleared.
+    </div>
+    {% endif %}
+
+    <p class="muted">This can't be undone.</p>
+
+    <form method="post" class="form-actions">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-red">Delete course</button>
+      <a href="{% url 'course_list' %}" class="btn btn-line">Keep it</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
