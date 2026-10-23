@@ -3,7 +3,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-replace-this-key-with-your-own'
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['lansxz1.pythonanywhere.com']
 
 STATIC_URL = '/static/'
