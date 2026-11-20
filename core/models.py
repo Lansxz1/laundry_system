@@ -1,30 +1,13 @@
 import uuid
+from decimal import Decimal
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.utils import timezone
-
-class Course(models.Model):
-    """Lookup table for the Course Management module (id, course_name)."""
-    course_name = models.CharField(max_length=100, unique=True)
-
-    class Meta:
-        ordering = ['course_name']
-
-    def __str__(self):
-        return self.course_name
 
 class Customer(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=15)
     email = models.EmailField(blank=True, null=True)
-    # New field: the selected course is stored as a foreign key (column course_id)
-    course = models.ForeignKey(
-        Course,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='customers',
-    )
     address = models.TextField(blank=True, null=True)
     date_registered = models.DateTimeField(auto_now_add=True)
 
@@ -84,10 +67,18 @@ class Order(models.Model):
     special_instructions = models.TextField(blank=True, null=True)
 
     def calculate_total(self):
-        """Calculates total price = (weight * rate) + charges - discounts."""
-        rate = self.service.price_per_kg if self.service else 0
-        subtotal = (self.weight_kg * rate) + self.additional_charge
-        self.total_price = max(0, subtotal - self.discount_amount)
+        """Calculates total price = (weight * rate) + charges - discounts.
+
+        Values are converted to Decimal first, because a new Order starts with
+        float defaults (0.0) and Python cannot multiply a float by a Decimal.
+        """
+        weight = Decimal(str(self.weight_kg or 0))
+        charge = Decimal(str(self.additional_charge or 0))
+        discount = Decimal(str(self.discount_amount or 0))
+        rate = Decimal(str(self.service.price_per_kg)) if self.service_id else Decimal('0')
+
+        subtotal = (weight * rate) + charge
+        self.total_price = max(Decimal('0'), subtotal - discount)
         return self.total_price
 
     def save(self, *args, **kwargs):

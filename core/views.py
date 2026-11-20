@@ -1,9 +1,7 @@
 from django.contrib import messages
-from django.db.models import Count
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Course, Customer, Service, Order
-from .forms import CourseForm, CustomerForm, ServiceForm, OrderForm, WeightRecordingForm, OrderPricingForm
-
+from .models import Customer, Service, Order
+from .forms import CustomerForm, ServiceForm, OrderForm, WeightRecordingForm, OrderPricingForm
 
 def home(request):
     return render(request, 'home.html')
@@ -11,48 +9,48 @@ def home(request):
 
 # ---------- Courses ----------
 
-def course_list(request):
-    courses = Course.objects.annotate(customer_count=Count('customers'))
-    return render(request, 'courses/course_list.html', {'courses': courses})
+# def course_list(request):
+#     courses = Course.objects.annotate(customer_count=Count('customers'))
+#     return render(request, 'courses/course_list.html', {'courses': courses})
 
 
-def course_create(request):
-    form = CourseForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        messages.success(request, 'Course added.')
-        return redirect('course_list')
-    return render(request, 'courses/course_form.html', {'form': form})
+# def course_create(request):
+#     form = CourseForm(request.POST or None)
+#     if request.method == 'POST' and form.is_valid():
+#         form.save()
+#         messages.success(request, 'Course added.')
+#         return redirect('course_list')
+#     return render(request, 'courses/course_form.html', {'form': form})
 
 
-def course_update(request, pk):
-    course = get_object_or_404(Course, pk=pk)
-    form = CourseForm(request.POST or None, instance=course)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        messages.success(request, 'Course updated.')
-        return redirect('course_list')
-    return render(request, 'courses/course_form.html', {'form': form})
+# def course_update(request, pk):
+#     course = get_object_or_404(Course, pk=pk)
+#     form = CourseForm(request.POST or None, instance=course)
+#     if request.method == 'POST' and form.is_valid():
+#         form.save()
+#         messages.success(request, 'Course updated.')
+#         return redirect('course_list')
+#     return render(request, 'courses/course_form.html', {'form': form})
 
 
-def course_delete(request, pk):
-    course = get_object_or_404(Course, pk=pk)
-    if request.method == 'POST':
-        course.delete()
-        messages.success(request, 'Course deleted.')
-        return redirect('course_list')
-    return render(request, 'courses/course_confirm_delete.html', {
-        'course': course,
-        'customer_count': course.customers.count(),
-    })
+# def course_delete(request, pk):
+#     course = get_object_or_404(Course, pk=pk)
+#     if request.method == 'POST':
+#         course.delete()
+#         messages.success(request, 'Course deleted.')
+#         return redirect('course_list')
+#     return render(request, 'courses/course_confirm_delete.html', {
+#         'course': course,
+#         'customer_count': course.customers.count(),
+#     })
 
 
 # ---------- Customers ----------
 
 def customer_list(request):
-    customers = Customer.objects.select_related('course').order_by('-date_registered')
+    # customers = Customer.objects.select_related('course').order_by('-date_registered')
+    customers = Customer.objects.all().order_by('-date_registered')
     return render(request, 'customers/customer_list.html', {'customers': customers})
-
 
 def customer_create(request):
     form = CustomerForm(request.POST or None)
@@ -64,9 +62,9 @@ def customer_create(request):
 
 
 def customer_detail(request, pk):
-    customer = get_object_or_404(Customer.objects.select_related('course'), pk=pk)
+    # customer = get_object_or_404(Customer.objects.select_related('course'), pk=pk)
+    customer = get_object_or_404(Customer, pk=pk)
     return render(request, 'customers/customer_detail.html', {'customer': customer})
-
 
 def customer_update(request, pk):
     customer = get_object_or_404(Customer, pk=pk)

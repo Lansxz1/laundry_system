@@ -1,22 +1,11 @@
 from django import forms
-from .models import Course, Customer, Service, Order
-
-
-class CourseForm(forms.ModelForm):
-    class Meta:
-        model = Course
-        fields = ['course_name']
+from .models import Customer, Service, Order
 
 
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # The Course dropdown is built from the Course table every time the form is shown.
-        self.fields['course'].empty_label = 'Select a course'
 
 
 class ServiceForm(forms.ModelForm):

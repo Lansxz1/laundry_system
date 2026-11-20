@@ -26,7 +26,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav mx-auto">
+            <ul class="navbar-nav mx-auto">
             <li class="nav-item">
               <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
             </li>
@@ -36,9 +36,11 @@
             <li class="nav-item">
               <a class="nav-link {% if 'customer' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'customer_list' %}">Customers</a>
             </li>
+            {% comment %}
             <li class="nav-item">
               <a class="nav-link {% if 'course' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'course_list' %}">Courses</a>
             </li>
+            {% endcomment %}
             <li class="nav-item">
               <a class="nav-link {% if 'service' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'service_list' %}">Services</a>
             </li>
