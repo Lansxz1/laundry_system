@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete customer - Laundry System{% endblock %}
+
+{% block content %}
+<div class="confirm">
+  <div class="panel panel-pad">
+    {% if blocked %}
+      <h1 class="h3 mb-3">"{{ customer.name }}" can’t be deleted</h1>
+      <div class="notice">
+        This customer has {{ payment_count }} payment{{ payment_count|pluralize }} on record. Payments are financial records and must be kept, so the customer and their orders cannot be deleted.
+      </div>
+      <div class="form-actions">
+        <a href="{% url 'customer_detail' customer.pk %}" class="btn btn-line">Back to the customer</a>
+      </div>
+    {% else %}
+      <h1 class="h3 mb-3">Delete "{{ customer.name }}"?</h1>
+
+      {% if order_count %}
+      <div class="notice">
+        This customer has {{ order_count }} order{{ order_count|pluralize }}. Deleting the customer deletes {{ order_count|pluralize:"it,them" }} too.
+      </div>
+      {% endif %}
+
+      <p class="muted">This can’t be undone.</p>
+
+      <form method="post" class="form-actions">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-red">Delete customer</button>
+        <a href="{% url 'customer_detail' customer.pk %}" class="btn btn-line">Keep it</a>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

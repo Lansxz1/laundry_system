@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports - Laundry System{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Reports</h1>
+    <p>Choose a report. Each one reads live data from your orders and payments.</p>
+  </div>
+</div>
+
+<div class="report-list">
+  <a href="{% url 'report_daily' %}" class="report-link">
+    <h2>Daily orders</h2>
+    <p>Every order received on a chosen date, with weight, amount and status.</p>
+  </a>
+  <a href="{% url 'report_processing' %}" class="report-link">
+    <h2>Laundry processing</h2>
+    <p>How many orders are at each step, from Received to Released, and the average processing time.</p>
+  </a>
+  <a href="{% url 'report_revenue' %}" class="report-link">
+    <h2>Payments and revenue</h2>
+    <p>Daily, weekly and monthly revenue, revenue by service, payment methods and outstanding balances.</p>
+  </a>
+  <a href="{% url 'report_customers' %}" class="report-link">
+    <h2>Customers</h2>
+    <p>New and returning customers, the most frequent customers and what each one spent.</p>
+  </a>
+  <a href="{% url 'report_services' %}" class="report-link">
+    <h2>Service performance</h2>
+    <p>Which services are used most, with their weight and revenue.</p>
+  </a>
+</div>
+{% endblock %}

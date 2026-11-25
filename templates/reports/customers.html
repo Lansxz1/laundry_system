@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Customer report - Laundry System{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Customers</h1>
+    <p>Customer activity from {{ start|date:"M d, Y" }} to {{ end|date:"M d, Y" }}. Cancelled orders are not counted.</p>
+  </div>
+  <div class="head-actions no-print"><a href="{% url 'reports_home' %}" class="btn btn-line">All reports</a></div>
+</div>
+
+{% include 'reports/_range.html' %}
+
+<div class="stat-grid stat-grid-4">
+  <div class="stat"><div class="stat-label">Total customers</div><div class="stat-value">{{ total_customers }}</div></div>
+  <div class="stat"><div class="stat-label">New in this period</div><div class="stat-value">{{ new_customers }}</div></div>
+  <div class="stat"><div class="stat-label">Ordered in this period</div><div class="stat-value">{{ active_customers }}</div></div>
+  <div class="stat"><div class="stat-label">Returning customers</div><div class="stat-value">{{ returning_customers }}</div></div>
+</div>
+
+<div class="panel">
+  <div class="panel-pad pb-0">
+    <h2 class="panel-title">Most frequent customers and their spending</h2>
+  </div>
+  <div class="table-responsive">
+    <table class="table data-table">
+      <thead>
+        <tr><th>Customer</th><th>Orders</th><th>Total spent</th><th>Type</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td class="strong">{{ row.customer.name }}</td>
+          <td class="num">{{ row.orders }}</td>
+          <td class="strong num">₱{{ row.spent|floatformat:"2g" }}</td>
+          <td>{% if row.returning %}Returning{% else %}New or first order{% endif %}</td>
+          <td><div class="row-links"><a href="{% url 'customer_detail' row.customer.pk %}" class="row-link">Order history</a></div></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="empty">No customer ordered in this period.</td></tr>
+        {% endfor %}
+      </tbody>
+      {% if rows %}
+      <tfoot>
+        <tr><td class="strong">Total</td><td></td><td class="strong num">₱{{ spent_total|floatformat:"2g" }}</td><td></td><td></td></tr>
+      </tfoot>
+      {% endif %}
+    </table>
+  </div>
+</div>
+<p class="muted mt-3">Returning means the customer also had an order before this period. Total spent is the billed amount of the orders.</p>
+{% endblock %}

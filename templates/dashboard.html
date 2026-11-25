@@ -1,0 +1,107 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Laundry System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Dashboard</h2>
+    <p class="text-muted">Overview for {{ data.today|date:"F d, Y" }}</p>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h6>Total Customers</h6>
+                <h3>{{ data.customers }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h6>Orders Today</h6>
+                <h3>{{ data.orders_today }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h6>Ready for Release</h6>
+                <h3>{{ data.ready }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-3">
+                <h6>Processing Orders</h6>
+                <h3>{{ data.processing }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="mb-3">Revenue Overview</h4>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6>Today</h6>
+                <h3>₱{{ data.revenue_today|floatformat:2 }}</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6>This Week</h6>
+                <h3>₱{{ data.revenue_week|floatformat:2 }}</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6>This Month</h6>
+                <h3>₱{{ data.revenue_month|floatformat:2 }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="mb-3">Unpaid Orders</h4>
+    <div class="card p-3 mb-4">
+        <h3>{{ data.unpaid_count }}</h3>
+        <p class="mb-0">Outstanding Balance: ₱{{ data.unpaid_total|floatformat:2 }}</p>
+    </div>
+
+    <h4 class="mb-3">Orders Due</h4>
+    <div class="card p-3 mb-4">
+        {% for order in data.due_orders %}
+            <p>
+                <a href="{% url 'order_detail' order.pk %}">
+                    {{ order.order_number }}
+                </a>
+                — {{ order.customer.name }}
+            </p>
+        {% empty %}
+            <p class="text-muted mb-0">No overdue orders.</p>
+        {% endfor %}
+    </div>
+
+    <h4 class="mb-3">Popular Services</h4>
+    <div class="card p-3 mb-4">
+        {% for row in data.popular %}
+            <p class="mb-1">{{ row.service.name }} — {{ row.orders }} orders</p>
+            <div class="progress mb-3">
+                <div class="progress-bar" style="width: {{ row.pct }}%"></div>
+            </div>
+        {% empty %}
+            <p class="text-muted mb-0">No service orders yet.</p>
+        {% endfor %}
+    </div>
+
+    <h4 class="mb-3">Recent Orders</h4>
+    <div class="card p-3">
+        {% for order in data.recent %}
+            <p>
+                <a href="{% url 'order_detail' order.pk %}">
+                    {{ order.order_number }}
+                </a>
+                — {{ order.customer.name }}
+                — {{ order.get_status_display }}
+            </p>
+        {% empty %}
+            <p class="text-muted mb-0">No orders recorded yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -39,22 +39,24 @@
           <th>Weight</th>
           <th>Total</th>
           <th>Status</th>
+          <th>Payment</th>
           <th>Received</th>
         </tr>
       </thead>
       <tbody>
-        {% for order in customer.orders.all %}
+        {% for order in orders %}
         <tr>
-          <td class="strong"><a href="{% url 'order_detail' order.pk %}">#{{ order.id }}</a></td>
+          <td class="strong"><a href="{% url 'order_detail' order.pk %}">{{ order.order_number }}</a></td>
           <td>{{ order.service.name }}</td>
           <td class="num">{{ order.weight_kg }} kg</td>
-          <td class="strong num">₱{{ order.total_price }}</td>
+          <td class="strong num">₱{{ order.total_price|floatformat:"2g" }}</td>
           <td><span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></td>
+          <td><span class="status status-{{ order.payment_label|slugify }}">{{ order.payment_label }}</span></td>
           <td>{{ order.date_received|date:"M d, Y" }}</td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="6" class="empty">No orders for this customer yet.</td>
+          <td colspan="7" class="empty">No orders for this customer yet.</td>
         </tr>
         {% endfor %}
       </tbody>

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Payments and revenue - Laundry System{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Payments and revenue</h1>
+    <p>Money received, counted when the payment is recorded. Change given back is not counted.</p>
+  </div>
+  <div class="head-actions no-print"><a href="{% url 'reports_home' %}" class="btn btn-line">All reports</a></div>
+</div>
+
+<div class="stat-grid stat-grid-4">
+  <div class="stat"><div class="stat-label">Today</div><div class="stat-value">₱{{ today|floatformat:"2g" }}</div></div>
+  <div class="stat">
+    <div class="stat-label">This week</div>
+    <div class="stat-value">₱{{ week|floatformat:"2g" }}</div>
+    <div class="stat-note">{{ week_range.0|date:"M d" }} to {{ week_range.1|date:"M d" }}</div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">This month</div>
+    <div class="stat-value">₱{{ month|floatformat:"2g" }}</div>
+    <div class="stat-note">{{ month_range.0|date:"M d" }} to {{ month_range.1|date:"M d" }}</div>
+  </div>
+  <div class="stat stat-active">
+    <div class="stat-label">Selected period</div>
+    <div class="stat-value">₱{{ range_total|floatformat:"2g" }}</div>
+    <div class="stat-note">{{ payments_count }} payment{{ payments_count|pluralize }}</div>
+  </div>
+</div>
+
+{% include 'reports/_range.html' %}
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-6">
+    <div class="panel h-100">
+      <div class="panel-pad pb-0"><h2 class="panel-title">Daily revenue</h2></div>
+      <div class="table-responsive">
+        <table class="table data-table">
+          <thead><tr><th>Date</th><th>Payments</th><th>Revenue</th></tr></thead>
+          <tbody>
+            {% for row in daily %}
+            <tr>
+              <td>{{ row.name|date:"M d, Y" }}</td>
+              <td class="num">{{ row.count }}</td>
+              <td class="strong num">₱{{ row.total|floatformat:"2g" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="empty">No payments in this period.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="panel panel-pad mb-4">
+      <h2 class="panel-title">Revenue by service</h2>
+      {% for row in by_service %}
+      <div class="bar-row">
+        <div class="bar-label"><span>{{ row.name }}</span><span class="num">₱{{ row.total|floatformat:"2g" }}</span></div>
+        <div class="bar"><span style="width: {{ row.pct }}%"></span></div>
+      </div>
+      {% empty %}
+      <p class="muted mb-0">No payments in this period.</p>
+      {% endfor %}
+    </div>
+
+    <div class="panel panel-pad">
+      <h2 class="panel-title">Payment methods</h2>
+      {% for row in by_method %}
+      <div class="bar-row">
+        <div class="bar-label"><span>{{ row.name }} ({{ row.count }})</span><span class="num">₱{{ row.total|floatformat:"2g" }}</span></div>
+        <div class="bar"><span style="width: {{ row.pct }}%"></span></div>
+      </div>
+      {% empty %}
+      <p class="muted mb-0">No payments in this period.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-pad pb-0">
+    <h2 class="panel-title">Outstanding balances <span class="muted">(all unpaid orders, ₱{{ unpaid_total|floatformat:"2g" }} in total)</span></h2>
+  </div>
+  <div class="table-responsive">
+    <table class="table data-table">
+      <thead>
+        <tr><th>Order</th><th>Customer</th><th>Status</th><th>Total</th><th>Paid</th><th>Balance</th></tr>
+      </thead>
+      <tbody>
+        {% for order in unpaid %}
+        <tr>
+          <td class="strong"><a href="{% url 'order_detail' order.pk %}">{{ order.order_number }}</a></td>
+          <td>{{ order.customer.name }}</td>
+          <td><span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></td>
+          <td class="num">₱{{ order.total_price|floatformat:"2g" }}</td>
+          <td class="num">₱{{ order.paid_total|floatformat:"2g" }}</td>
+          <td class="strong num">₱{{ order.balance_due|floatformat:"2g" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="empty">Every billed order is paid.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

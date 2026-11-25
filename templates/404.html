@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Page not found - Laundry System{% endblock %}
+
+{% block content %}
+<div class="confirm">
+  <div class="panel panel-pad">
+    <h1 class="h3 mb-2">We can’t find that page</h1>
+    <p class="muted">The address may be wrong, or the record may have been deleted.</p>
+    <div class="form-actions">
+      <a href="{% url 'home' %}" class="btn btn-teal">Go to the home page</a>
+      <a href="{% url 'order_list' %}" class="btn btn-line">Open orders</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

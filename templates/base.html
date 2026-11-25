@@ -26,25 +26,25 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto">
+          {% with p=request.path %}
+          <ul class="navbar-nav mx-auto">
             <li class="nav-item">
-              <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
+              <a class="nav-link {% if p|slice:':10' == '/dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">Dashboard</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {% if 'order' in request.resolver_match.url_name or request.resolver_match.url_name == 'record_weight' or request.resolver_match.url_name == 'update_pricing_status' %}active{% endif %}" href="{% url 'order_list' %}">Orders</a>
+              <a class="nav-link {% if p|slice:':7' == '/orders' or p|slice:':9' == '/payments' or p|slice:':9' == '/releases' %}active{% endif %}" href="{% url 'order_list' %}">Orders</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {% if 'customer' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'customer_list' %}">Customers</a>
+              <a class="nav-link {% if p|slice:':10' == '/customers' %}active{% endif %}" href="{% url 'customer_list' %}">Customers</a>
             </li>
-            {% comment %}
             <li class="nav-item">
-              <a class="nav-link {% if 'course' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'course_list' %}">Courses</a>
+              <a class="nav-link {% if p|slice:':9' == '/services' %}active{% endif %}" href="{% url 'service_list' %}">Services</a>
             </li>
-            {% endcomment %}
             <li class="nav-item">
-              <a class="nav-link {% if 'service' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'service_list' %}">Services</a>
+              <a class="nav-link {% if p|slice:':8' == '/reports' %}active{% endif %}" href="{% url 'reports_home' %}">Reports</a>
             </li>
           </ul>
+          {% endwith %}
           <a href="{% url 'order_create' %}" class="btn btn-teal btn-round mt-2 mt-lg-0">New order</a>
         </div>
       </nav>

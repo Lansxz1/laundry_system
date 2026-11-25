@@ -3,12 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-
-    # # Courses
-    # path('courses/', views.course_list, name='course_list'),
-    # path('courses/add/', views.course_create, name='course_create'),
-    # path('courses/<int:pk>/edit/', views.course_update, name='course_update'),
-    # path('courses/<int:pk>/delete/', views.course_delete, name='course_delete'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 
     # Customers
     path('customers/', views.customer_list, name='customer_list'),
@@ -31,4 +26,21 @@ urlpatterns = [
     path('orders/<int:pk>/delete/', views.order_delete, name='order_delete'),
     path('orders/<int:pk>/weight/', views.record_weight, name='record_weight'),
     path('orders/<int:pk>/pricing/', views.update_pricing_status, name='update_pricing_status'),
+    path('orders/<int:pk>/advance/', views.order_advance, name='order_advance'),
+    path('orders/<int:pk>/cancel/', views.order_cancel, name='order_cancel'),
+    path('orders/<int:pk>/bill/', views.order_bill, name='order_bill'),
+
+    # Payments and release
+    path('orders/<int:pk>/pay/', views.payment_create, name='payment_create'),
+    path('payments/<int:pk>/receipt/', views.payment_receipt, name='payment_receipt'),
+    path('orders/<int:pk>/release/', views.release_create, name='release_create'),
+    path('releases/<int:pk>/', views.release_detail, name='release_detail'),
+
+    # Reports
+    path('reports/', views.reports_home, name='reports_home'),
+    path('reports/daily-orders/', views.report_daily, name='report_daily'),
+    path('reports/processing/', views.report_processing, name='report_processing'),
+    path('reports/revenue/', views.report_revenue, name='report_revenue'),
+    path('reports/customers/', views.report_customers, name='report_customers'),
+    path('reports/services/', views.report_services, name='report_services'),
 ]

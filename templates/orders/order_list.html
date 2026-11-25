@@ -6,11 +6,18 @@
 <div class="page-head">
   <div>
     <h1>Orders</h1>
-    <p>Every laundry order and where it stands.</p>
+    <p>Every laundry order, where it stands and whether it is paid.</p>
   </div>
   <div class="head-actions">
     <a href="{% url 'order_create' %}" class="btn btn-teal">New order</a>
   </div>
+</div>
+
+<div class="pills">
+  <a href="{% url 'order_list' %}" class="pill {% if not active_filter %}active{% endif %}">All</a>
+  <a href="{% url 'order_list' %}?filter=ready" class="pill {% if active_filter == 'ready' %}active{% endif %}">Ready for release</a>
+  <a href="{% url 'order_list' %}?filter=due" class="pill {% if active_filter == 'due' %}active{% endif %}">Past expected release date</a>
+  <a href="{% url 'order_list' %}?filter=unpaid" class="pill {% if active_filter == 'unpaid' %}active{% endif %}">Unpaid</a>
 </div>
 
 <div class="panel">
@@ -24,29 +31,33 @@
           <th>Weight</th>
           <th>Total</th>
           <th>Status</th>
+          <th>Payment</th>
+          <th>Expected release</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         {% for order in orders %}
         <tr>
-          <td class="strong">#{{ order.id }}</td>
+          <td class="strong"><a href="{% url 'order_detail' order.pk %}">{{ order.order_number }}</a></td>
           <td>{{ order.customer.name }}</td>
           <td>{{ order.service.name }}</td>
           <td class="num">{% if order.weight_kg %}{{ order.weight_kg }} kg{% else %}<span class="muted">Not weighed</span>{% endif %}</td>
-          <td class="strong num">₱{{ order.total_price|default:"0.00" }}</td>
+          <td class="strong num">₱{{ order.total_price|floatformat:"2g" }}</td>
           <td><span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></td>
+          <td><span class="status status-{{ order.payment_label|slugify }}">{{ order.payment_label }}</span></td>
+          <td class="num {% if order.is_overdue %}overdue{% endif %}">{{ order.expected_release_date|date:"M d, h:i A"|default:"--" }}</td>
           <td>
             <div class="row-links">
-              <a href="{% url 'order_detail' order.pk %}" class="row-link">View</a>
-              <a href="{% url 'record_weight' order.pk %}" class="row-link">Weight</a>
-              <a href="{% url 'update_pricing_status' order.pk %}" class="row-link">Pricing</a>
+              <a href="{% url 'order_detail' order.pk %}" class="row-link">Open</a>
+              {% if not order.is_closed %}<a href="{% url 'order_update' order.pk %}" class="row-link">Edit</a>{% endif %}
+              <a href="{% url 'order_delete' order.pk %}" class="row-link row-link-danger">Delete</a>
             </div>
           </td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="7" class="empty">No orders yet. <a href="{% url 'order_create' %}">Create the first order.</a></td>
+          <td colspan="9" class="empty">No orders here. <a href="{% url 'order_create' %}">Create an order.</a></td>
         </tr>
         {% endfor %}
       </tbody>

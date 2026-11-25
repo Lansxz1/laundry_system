@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Receipt {{ payment.receipt_number }} - Laundry System{% endblock %}
+
+{% block content %}
+<div class="page-head no-print">
+  <div>
+    <h1>Receipt</h1>
+    <p>{{ payment.receipt_number }} for order {{ order.order_number }}.</p>
+  </div>
+  <div class="head-actions">
+    <button type="button" class="btn btn-teal" onclick="window.print()">Print receipt</button>
+    <a href="{% url 'order_detail' order.pk %}" class="btn btn-line">Back to order</a>
+  </div>
+</div>
+
+<div class="paper">
+  <div class="paper-head">
+    <div class="paper-title">LAUNDRY MANAGEMENT SYSTEM</div>
+    <div class="muted">Official receipt {{ payment.receipt_number }}</div>
+  </div>
+  <dl class="paper-list">
+    <div><dt>Order no.</dt><dd>{{ order.order_number }}</dd></div>
+    <div><dt>Customer</dt><dd>{{ order.customer.name }}</dd></div>
+    <div><dt>Service</dt><dd>{{ order.service.name }}</dd></div>
+    <div><dt>Weight</dt><dd>{{ order.weight_kg }} kg</dd></div>
+    <div><dt>Rate</dt><dd>₱{{ order.service.price_per_kg|floatformat:"2g" }} per kg</dd></div>
+  </dl>
+  <hr class="paper-rule">
+  <dl class="paper-list">
+    <div><dt>Subtotal</dt><dd>₱{{ subtotal|floatformat:"2g" }}</dd></div>
+    <div><dt>Additional charges</dt><dd>₱{{ order.additional_charge|floatformat:"2g" }}</dd></div>
+    <div><dt>Discount</dt><dd>−₱{{ order.discount_amount|floatformat:"2g" }}</dd></div>
+    <div class="paper-total"><dt>Total</dt><dd>₱{{ order.total_price|floatformat:"2g" }}</dd></div>
+  </dl>
+  <hr class="paper-rule">
+  <dl class="paper-list">
+    <div><dt>Amount paid</dt><dd>₱{{ payment.amount_paid|floatformat:"2g" }}</dd></div>
+    <div><dt>Change</dt><dd>₱{{ payment.change|floatformat:"2g" }}</dd></div>
+    <div><dt>Payment method</dt><dd>{{ payment.get_payment_method_display }}</dd></div>
+    {% if payment.reference_no %}<div><dt>Reference no.</dt><dd>{{ payment.reference_no }}</dd></div>{% endif %}
+    <div><dt>Date</dt><dd>{{ payment.payment_date|date:"F j, Y, h:i A" }}</dd></div>
+    <div><dt>Payment status</dt><dd>{{ payment.get_status_display }}</dd></div>
+    <div><dt>Balance remaining</dt><dd>₱{{ balance|floatformat:"2g" }}</dd></div>
+  </dl>
+  <p class="paper-foot">Thank you for choosing us.</p>
+</div>
+{% endblock %}

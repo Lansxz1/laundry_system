@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Cancel order - Laundry System{% endblock %}
+
+{% block content %}
+<div class="confirm">
+  <div class="panel panel-pad">
+    {% if reason %}
+      <h1 class="h3 mb-3">Order {{ order.order_number }} can’t be cancelled</h1>
+      <div class="notice">{{ reason }}</div>
+      <div class="form-actions">
+        <a href="{% url 'order_detail' order.pk %}" class="btn btn-line">Back to the order</a>
+      </div>
+    {% else %}
+      <h1 class="h3 mb-2">Cancel order {{ order.order_number }}?</h1>
+      <p class="muted">The order stays in the system with the status Cancelled. A cancelled order cannot be changed, paid or released.</p>
+      <form method="post" class="form-actions">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-red">Cancel order</button>
+        <a href="{% url 'order_detail' order.pk %}" class="btn btn-line">Keep it</a>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

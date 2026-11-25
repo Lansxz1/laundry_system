@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete order - Laundry System{% endblock %}
+
+{% block content %}
+<div class="confirm">
+  <div class="panel panel-pad">
+    {% if blocked %}
+      <h1 class="h3 mb-3">Order {{ order.order_number }} can’t be deleted</h1>
+      <div class="notice">
+        This order has {% if payment_count %}{{ payment_count }} payment{{ payment_count|pluralize }}{% else %}a release record{% endif %}, and money and release records must be kept.
+        To stop working on it, cancel the order instead.
+      </div>
+      <div class="form-actions">
+        <a href="{% url 'order_detail' order.pk %}" class="btn btn-line">Back to the order</a>
+      </div>
+    {% else %}
+      <h1 class="h3 mb-3">Delete order {{ order.order_number }}?</h1>
+      <p class="muted">This order for {{ order.customer.name }} will be removed. This can’t be undone.</p>
+      <form method="post" class="form-actions">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-red">Delete order</button>
+        <a href="{% url 'order_detail' order.pk %}" class="btn btn-line">Keep it</a>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

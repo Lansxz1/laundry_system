@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Accept payment - Laundry System{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Accept payment</h1>
+    <p>Order {{ order.order_number }} for {{ order.customer.name }}.</p>
+  </div>
+</div>
+
+<div class="form-wrap">
+  <div class="panel panel-pad mb-4">
+    <h2 class="panel-title">Bill</h2>
+    <div class="ticket-line"><span>Service</span><span>{{ order.service.name }}</span></div>
+    <div class="ticket-line"><span>Weight</span><span class="num">{{ order.weight_kg }} kg</span></div>
+    <div class="ticket-line"><span>Total</span><span class="num">₱{{ order.total_price|floatformat:"2g" }}</span></div>
+    <div class="ticket-line"><span>Paid so far</span><span class="num">₱{{ paid|floatformat:"2g" }}</span></div>
+    <div class="ticket-total">
+      <span>Balance due</span>
+      <span class="amount num">₱{{ balance|floatformat:"2g" }}</span>
+    </div>
+  </div>
+
+  {% if reason %}
+  <div class="notice">{{ reason }}</div>
+  <div class="form-actions">
+    <a href="{% url 'order_detail' order.pk %}" class="btn btn-line">Back to the order</a>
+  </div>
+  {% else %}
+  <div class="panel panel-pad">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-error">{{ form.non_field_errors }}</div>{% endif %}
+
+      {% for field in form %}
+      <div class="field">
+        {{ field.label_tag }} {{ field }}
+        {% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}
+        {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      {% endfor %}
+
+      <p class="muted">For cash, any amount above the balance is returned as change. A smaller amount is saved as a partial payment.</p>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-teal">Record payment</button>
+        <a href="{% url 'order_detail' order.pk %}" class="btn btn-line">Cancel</a>
+      </div>
+    </form>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

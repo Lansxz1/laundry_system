@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Laundry processing - Laundry System{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Laundry processing</h1>
+    <p>Where every order stands right now.</p>
+  </div>
+  <div class="head-actions no-print">
+    <button type="button" class="btn btn-line" onclick="window.print()">Print</button>
+    <a href="{% url 'reports_home' %}" class="btn btn-line">All reports</a>
+  </div>
+</div>
+
+<div class="stat-grid stat-grid-4">
+  {% for row in rows %}
+  <a href="{% url 'report_processing' %}?status={{ row.code }}" class="stat stat-link {% if status == row.code %}stat-active{% endif %}">
+    <div class="stat-label">{{ row.label }}</div>
+    <div class="stat-value">{{ row.count }}</div>
+  </a>
+  {% endfor %}
+</div>
+
+<p class="muted">
+  {{ total }} order{{ total|pluralize }} in total.
+  {% if avg_hours is not None %}Average processing time, from received to ready for release: <strong>{{ avg_hours }} hours</strong>.{% else %}The average processing time appears once an order has been marked ready for release.{% endif %}
+</p>
+
+<div class="panel">
+  <div class="panel-pad pb-0">
+    <h2 class="panel-title">
+      {% if status %}Orders with this status{% else %}Orders still in progress{% endif %}
+      {% if status %}<a href="{% url 'report_processing' %}" class="row-link ms-3">Show orders in progress</a>{% endif %}
+    </h2>
+  </div>
+  <div class="table-responsive">
+    <table class="table data-table">
+      <thead>
+        <tr><th>Order</th><th>Customer</th><th>Service</th><th>Status</th><th>Expected release</th></tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td class="strong"><a href="{% url 'order_detail' order.pk %}">{{ order.order_number }}</a></td>
+          <td>{{ order.customer.name }}</td>
+          <td>{{ order.service.name }}</td>
+          <td><span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></td>
+          <td class="num {% if order.is_overdue %}overdue{% endif %}">{{ order.expected_release_date|date:"M d, h:i A"|default:"--" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="empty">No orders here.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

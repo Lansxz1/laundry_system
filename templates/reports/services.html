@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Service performance - Laundry System{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Service performance</h1>
+    <p>Which services are used most, from {{ start|date:"M d, Y" }} to {{ end|date:"M d, Y" }}. Cancelled orders are not counted.</p>
+  </div>
+  <div class="head-actions no-print"><a href="{% url 'reports_home' %}" class="btn btn-line">All reports</a></div>
+</div>
+
+{% include 'reports/_range.html' %}
+
+<div class="panel">
+  <div class="table-responsive">
+    <table class="table data-table">
+      <thead>
+        <tr><th>Service</th><th>Orders</th><th></th><th>Weight</th><th>Billed</th><th>Revenue received</th></tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td class="strong">{{ row.service.name }}</td>
+          <td class="num">{{ row.orders }}</td>
+          <td class="bar-cell"><div class="bar"><span style="width: {{ row.pct }}%"></span></div></td>
+          <td class="num">{{ row.weight|floatformat:"2" }} kg</td>
+          <td class="num">₱{{ row.billed|floatformat:"2g" }}</td>
+          <td class="strong num">₱{{ row.revenue|floatformat:"2g" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="empty">No orders in this period.</td></tr>
+        {% endfor %}
+      </tbody>
+      {% if rows %}
+      <tfoot>
+        <tr>
+          <td class="strong">Total</td>
+          <td class="strong num">{{ orders_total }}</td>
+          <td></td>
+          <td class="strong num">{{ weight_total|floatformat:"2" }} kg</td>
+          <td class="strong num">₱{{ billed_total|floatformat:"2g" }}</td>
+          <td class="strong num">₱{{ revenue_total|floatformat:"2g" }}</td>
+        </tr>
+      </tfoot>
+      {% endif %}
+    </table>
+  </div>
+</div>
+<p class="muted mt-3">Billed is the price of the orders. Revenue received is the money actually paid so far.</p>
+{% endblock %}

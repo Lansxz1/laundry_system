@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Release laundry - Laundry System{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Release laundry</h1>
+    <p>Order {{ order.order_number }} for {{ order.customer.name }}.</p>
+  </div>
+</div>
+
+<div class="form-wrap">
+  <div class="panel panel-pad mb-4">
+    <h2 class="panel-title">Before releasing</h2>
+    {% for label, ok in checks %}
+    <div class="ticket-line">
+      <span>{{ label }}</span>
+      <span class="status {{ ok|yesno:'status-released,status-cancelled' }}">{{ ok|yesno:"Yes,No" }}</span>
+    </div>
+    {% endfor %}
+    {% if balance %}
+    <div class="ticket-line"><span>Outstanding balance</span><span class="num strong">₱{{ balance|floatformat:"2g" }}</span></div>
+    {% endif %}
+    <div class="ticket-line"><span>Current status</span><span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></div>
+  </div>
+
+  <div class="panel panel-pad">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+      <div class="form-error">
+        {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+      </div>
+      {% endif %}
+
+      {% for field in form %}
+      <div class="field {% if field.field.widget.input_type == 'checkbox' %}check-field{% endif %}">
+        {% if field.field.widget.input_type == 'checkbox' %}
+          {{ field }} {{ field.label_tag }}
+        {% else %}
+          {{ field.label_tag }} {{ field }}
+        {% endif %}
+        {% if field.help_text %}<div class="help">{{ field.help_text }}</div>{% endif %}
+        {% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+      </div>
+      {% endfor %}
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-teal">Confirm release</button>
+        <a href="{% url 'order_detail' order.pk %}" class="btn btn-line">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

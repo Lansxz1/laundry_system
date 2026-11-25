@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Release {{ release.release_number }} - Laundry System{% endblock %}
+
+{% block content %}
+<div class="page-head no-print">
+  <div>
+    <h1>Release record</h1>
+    <p>{{ release.release_number }} for order {{ order.order_number }}.</p>
+  </div>
+  <div class="head-actions">
+    <button type="button" class="btn btn-teal" onclick="window.print()">Print</button>
+    <a href="{% url 'order_detail' order.pk %}" class="btn btn-line">Back to order</a>
+  </div>
+</div>
+
+<div class="paper">
+  <div class="paper-head">
+    <div class="paper-title">LAUNDRY MANAGEMENT SYSTEM</div>
+    <div class="muted">Laundry release {{ release.release_number }}</div>
+  </div>
+  <dl class="paper-list">
+    <div><dt>Release no.</dt><dd>{{ release.release_number }}</dd></div>
+    <div><dt>Order no.</dt><dd>{{ order.order_number }}</dd></div>
+    <div><dt>Customer</dt><dd>{{ order.customer.name }}</dd></div>
+    <div><dt>Service</dt><dd>{{ order.service.name }}</dd></div>
+    <div><dt>Weight</dt><dd>{{ order.weight_kg }} kg</dd></div>
+    <div><dt>Release date</dt><dd>{{ release.released_at|date:"F j, Y" }}</dd></div>
+    <div><dt>Release time</dt><dd>{{ release.released_at|date:"h:i A" }}</dd></div>
+    <div><dt>Released by</dt><dd>{{ release.released_by }}</dd></div>
+    <div><dt>Received by</dt><dd>{{ release.received_by|default:"--" }}</dd></div>
+    {% if release.notes %}<div><dt>Notes</dt><dd>{{ release.notes }}</dd></div>{% endif %}
+  </dl>
+  <div class="signature">
+    <div class="signature-line"></div>
+    <div class="muted">Customer signature</div>
+  </div>
+</div>
+{% endblock %}

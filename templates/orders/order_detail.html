@@ -6,13 +6,53 @@
 <div class="page-head">
   <div>
     <h1>Order {{ order.order_number }}</h1>
-    <p><span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></p>
+    <p>
+      <span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span>
+      <span class="status status-{{ order.payment_label|slugify }} ms-3">{{ order.payment_label }}</span>
+      {% if order.is_overdue %}<span class="tag-overdue ms-3">Past expected release date</span>{% endif %}
+    </p>
   </div>
   <div class="head-actions">
-    <a href="{% url 'record_weight' pk=order.pk %}" class="btn btn-line">Record weight</a>
-    <a href="{% url 'update_pricing_status' pk=order.pk %}" class="btn btn-teal">Update pricing and status</a>
+    {% if not order.is_closed %}<a href="{% url 'order_update' order.pk %}" class="btn btn-line">Edit order</a>{% endif %}
+    <a href="{% url 'order_bill' order.pk %}" class="btn btn-line">View bill</a>
   </div>
 </div>
+
+{% if order.is_closed %}
+<div class="panel panel-pad mb-4">
+  <h2 class="panel-title">This order is {{ order.get_status_display|lower }}</h2>
+  <p class="muted mb-0">
+    It can no longer be changed.
+    {% if release %}<a href="{% url 'release_detail' release.pk %}">Open the release record {{ release.release_number }}.</a>{% endif %}
+  </p>
+</div>
+{% else %}
+<div class="panel panel-pad mb-4">
+  <h2 class="panel-title">Next step</h2>
+  <div class="action-row">
+    {% if next_action %}
+      <form method="post" action="{% url 'order_advance' order.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-teal">{{ next_action.1 }}</button>
+      </form>
+    {% elif not order.has_weight %}
+      <a href="{% url 'record_weight' order.pk %}" class="btn btn-teal">Record weight</a>
+    {% elif order.status == 'READY_FOR_RELEASE' %}
+      <a href="{% url 'release_create' order.pk %}" class="btn btn-teal">Release laundry</a>
+    {% endif %}
+
+    {% if order.has_weight %}<a href="{% url 'record_weight' order.pk %}" class="btn btn-line">Update weight</a>{% endif %}
+    <a href="{% url 'update_pricing_status' order.pk %}" class="btn btn-line">Charges, discount and status</a>
+    {% if can_pay %}<a href="{% url 'payment_create' order.pk %}" class="btn btn-line">Accept payment</a>{% endif %}
+    <a href="{% url 'order_cancel' order.pk %}" class="row-link row-link-danger ms-auto">Cancel order</a>
+  </div>
+  {% if not order.has_weight %}
+  <p class="muted mt-3 mb-0">The order cannot move forward until its weight is recorded and the price is calculated.</p>
+  {% elif order.status == 'READY_FOR_RELEASE' and not order.is_fully_paid %}
+  <p class="muted mt-3 mb-0">The laundry is ready, but it can only be released once the balance of ₱{{ balance|floatformat:"2g" }} is paid.</p>
+  {% endif %}
+</div>
+{% endif %}
 
 <div class="row g-4">
   <div class="col-lg-7">
@@ -20,13 +60,15 @@
       <h2 class="panel-title">Order details</h2>
       <dl class="facts">
         <dt>Customer</dt>
-        <dd>{{ order.customer.name }}</dd>
+        <dd><a href="{% url 'customer_detail' order.customer.pk %}">{{ order.customer.name }}</a></dd>
         <dt>Service</dt>
         <dd>{{ order.service.name }} <span class="muted">(₱{{ order.service.price_per_kg }} per kg)</span></dd>
         <dt>Received</dt>
         <dd>{{ order.date_received|date:"M d, Y, h:i A" }}</dd>
         <dt>Expected release</dt>
-        <dd>{% if order.expected_release_date %}{{ order.expected_release_date|date:"M d, Y, h:i A" }}{% else %}<span class="muted">Not set</span>{% endif %}</dd>
+        <dd {% if order.is_overdue %}class="overdue"{% endif %}>{% if order.expected_release_date %}{{ order.expected_release_date|date:"M d, Y, h:i A" }}{% else %}<span class="muted">Not set</span>{% endif %}</dd>
+        <dt>Ready since</dt>
+        <dd>{% if order.ready_at %}{{ order.ready_at|date:"M d, Y, h:i A" }}{% else %}<span class="muted">Not yet</span>{% endif %}</dd>
         <dt>Instructions</dt>
         <dd>{{ order.special_instructions|default:"None" }}</dd>
       </dl>
@@ -37,15 +79,70 @@
     <div class="panel panel-pad h-100">
       <h2 class="panel-title">Price</h2>
       <div class="ticket-line"><span>Weight</span><span class="num">{{ order.weight_kg }} kg</span></div>
-      <div class="ticket-line"><span>Additional charge</span><span class="num">₱{{ order.additional_charge }}</span></div>
-      <div class="ticket-line"><span>Discount</span><span class="num">−₱{{ order.discount_amount }}</span></div>
+      <div class="ticket-line"><span>Additional charge</span><span class="num">₱{{ order.additional_charge|floatformat:"2g" }}</span></div>
+      <div class="ticket-line"><span>Discount</span><span class="num">−₱{{ order.discount_amount|floatformat:"2g" }}</span></div>
       <div class="ticket-total">
         <span>Total</span>
-        <span class="amount num">₱{{ order.total_price }}</span>
+        <span class="amount num">₱{{ order.total_price|floatformat:"2g" }}</span>
       </div>
+      <div class="ticket-line mt-2"><span>Paid so far</span><span class="num">₱{{ paid|floatformat:"2g" }}</span></div>
+      <div class="ticket-line"><span>Balance due</span><span class="num strong">₱{{ balance|floatformat:"2g" }}</span></div>
     </div>
   </div>
 </div>
 
-<a href="{% url 'order_list' %}" class="back-link">Back to orders</a>
+<div class="panel mt-4">
+  <div class="panel-pad pb-0"><h2 class="panel-title">Payments</h2></div>
+  <div class="table-responsive">
+    <table class="table data-table">
+      <thead>
+        <tr><th>Receipt</th><th>Date</th><th>Method</th><th>Reference</th><th>Received</th><th>Change</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for payment in payments %}
+        <tr>
+          <td class="strong">{{ payment.receipt_number }}</td>
+          <td>{{ payment.payment_date|date:"M d, Y, h:i A" }}</td>
+          <td>{{ payment.get_payment_method_display }}</td>
+          <td>{{ payment.reference_no|default:"--" }}</td>
+          <td class="num">₱{{ payment.amount_paid|floatformat:"2g" }}</td>
+          <td class="num">₱{{ payment.change|floatformat:"2g" }}</td>
+          <td><span class="status {% if payment.status == 'PAID' %}status-paid{% else %}status-partial{% endif %}">{{ payment.get_status_display }}</span></td>
+          <td><div class="row-links"><a href="{% url 'payment_receipt' payment.pk %}" class="row-link">Receipt</a></div></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="8" class="empty">No payments yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if release %}
+<div class="panel panel-pad mt-4">
+  <h2 class="panel-title">Release</h2>
+  <p class="mb-0">
+    Released on {{ release.released_at|date:"M d, Y, h:i A" }} by {{ release.released_by }}
+    {% if release.received_by %}to {{ release.received_by }}{% endif %}.
+    <a href="{% url 'release_detail' release.pk %}">Open release record {{ release.release_number }}</a>
+  </p>
+</div>
+{% endif %}
+
+<div class="panel panel-pad mt-4">
+  <h2 class="panel-title">Processing history</h2>
+  <ul class="timeline">
+    {% for log in logs %}
+    <li>
+      <span class="status status-{{ log.to_status|lower }}">{{ log.to_label }}</span>
+      <span class="muted">{{ log.changed_at|date:"M d, Y, h:i A" }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="detail-foot">
+  <a href="{% url 'order_list' %}" class="back-link">Back to orders</a>
+  <a href="{% url 'order_delete' order.pk %}" class="row-link row-link-danger">Delete order</a>
+</div>
 {% endblock %}

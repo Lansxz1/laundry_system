@@ -6,7 +6,7 @@
 <div class="page-head">
   <div>
     <h1>Services</h1>
-    <p>What you offer and what it costs per kilo.</p>
+    <p>What you offer, what it costs per kilo and how long it takes.</p>
   </div>
   <div class="head-actions">
     <a href="{% url 'service_create' %}" class="btn btn-teal">Add service</a>
@@ -20,6 +20,7 @@
         <tr>
           <th>Service</th>
           <th>Price per kg</th>
+          <th>Processing time</th>
           <th>Description</th>
           <th>Status</th>
           <th></th>
@@ -29,7 +30,8 @@
         {% for service in services %}
         <tr>
           <td class="strong">{{ service.name }}</td>
-          <td class="strong num">₱{{ service.price_per_kg }}</td>
+          <td class="strong num">₱{{ service.price_per_kg|floatformat:"2g" }}</td>
+          <td class="num">{{ service.processing_hours }} hr{{ service.processing_hours|pluralize }}</td>
           <td class="muted">{{ service.description|default:"No description" }}</td>
           <td>
             {% if service.is_active %}
@@ -47,7 +49,7 @@
         </tr>
         {% empty %}
         <tr>
-          <td colspan="5" class="empty">No services yet. <a href="{% url 'service_create' %}">Add the first service.</a></td>
+          <td colspan="6" class="empty">No services yet. <a href="{% url 'service_create' %}">Add the first service.</a></td>
         </tr>
         {% endfor %}
       </tbody>
